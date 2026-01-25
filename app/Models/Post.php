@@ -24,19 +24,19 @@ class Post extends Model
         'published_at' => 'datetime',
     ];
 
-    // Relación: un post pertenece a un usuario (autor)
+    // Relation: post from the author
     public function author()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    // Scope: solo publicados
+    // Scope: just published posts
     public function scopePublished($query)
     {
         return $query->where('status', 'published');
     }
 
-    // Generar slug automático
+    // Automatically generate slug
     protected static function booted()
     {
         static::creating(function ($post) {
