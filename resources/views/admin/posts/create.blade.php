@@ -45,7 +45,6 @@
                     name="content"
                     class="w-full p-2 border rounded"
                     rows="12"
-                    required
                 >{{ old('content') }}</textarea>
                 @error('content')
                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>

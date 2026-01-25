@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Mews\Purifier\Facades\Purifier;
 
 class PostController extends Controller
 {
@@ -31,6 +32,8 @@ class PostController extends Controller
 
         $data['user_id'] = Auth::id();
 
+        $data['content'] = Purifier::clean($data['content']);
+
         Post::create($data);
 
         return redirect()->route('posts.index')
@@ -50,6 +53,8 @@ class PostController extends Controller
             'content' => 'required|string',
             'status'  => 'required|in:draft,published',
         ]);
+
+        $data['content'] = Purifier::clean($data['content']);
 
         $post->update($data);
 
