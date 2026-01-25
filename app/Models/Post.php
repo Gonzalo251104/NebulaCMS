@@ -42,5 +42,15 @@ class Post extends Model
         static::creating(function ($post) {
             $post->slug = Str::slug($post->title);
         });
+
+        static::saving(function ($post) {
+            if ($post->status === 'published' && $post->published_at === null) {
+                $post->published_at = now();
+            }
+
+            if ($post->status === 'draft') {
+                $post->published_at = null;
+            }
+        });
     }
 }
