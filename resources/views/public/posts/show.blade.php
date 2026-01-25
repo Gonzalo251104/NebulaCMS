@@ -12,6 +12,15 @@
                 Publicado: {{ optional($post->published_at)->format('d/m/Y H:i') ?? '—' }}
             </p>
 
+            {{-- Imagen destacada --}}
+            @if ($post->featured_image)
+                <img
+                    class="w-full rounded mt-4 mb-6 border"
+                    src="{{ asset('storage/' . $post->featured_image) }}"
+                    alt="{{ $post->title }}"
+                >
+            @endif
+
             @if ($post->excerpt)
                 <p class="mt-4 text-gray-800">{{ $post->excerpt }}</p>
             @endif

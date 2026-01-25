@@ -14,6 +14,16 @@
         <div class="space-y-4">
             @foreach ($posts as $post)
                 <article class="bg-white p-6 rounded shadow-sm">
+
+                    {{-- Imagen destacada --}}
+                    @if ($post->featured_image)
+                        <img
+                            class="w-full rounded mb-4 border"
+                            src="{{ asset('storage/' . $post->featured_image) }}"
+                            alt="{{ $post->title }}"
+                        >
+                    @endif
+
                     <h2 class="text-2xl font-semibold">
                         <a class="underline" href="{{ route('public.posts.show', $post->slug) }}">
                             {{ $post->title }}

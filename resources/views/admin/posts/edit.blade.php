@@ -4,7 +4,7 @@
     </x-slot>
 
     <div class="p-6 max-w-4xl mx-auto">
-        <form method="POST" action="{{ route('posts.update', $post) }}">
+        <form method="POST" action="{{ route('posts.update', $post) }}" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
@@ -35,6 +35,19 @@
                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                 @enderror
             </div>
+
+            <div class="mb-4">
+                <label class="block font-medium mb-1">Imagen destacada</label>
+
+                @if ($post->featured_image)
+                    <img class="mb-3 rounded border max-h-56" src="{{ asset('storage/' . $post->featured_image) }}" alt="Featured image">
+                @endif
+
+                <input type="file" name="featured_image" class="w-full p-2 border rounded" accept="image/*">
+                @error('featured_image')
+                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>  
 
             {{-- Contenido --}}
             <div class="mb-4">

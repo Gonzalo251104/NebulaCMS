@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Mews\Purifier\Facades\Purifier;
 
 class PostController extends Controller
@@ -28,11 +29,16 @@ class PostController extends Controller
             'excerpt' => 'nullable|string|max:500',
             'content' => 'required|string',
             'status'  => 'required|in:draft,published',
+            'featured_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         $data['user_id'] = Auth::id();
 
         $data['content'] = Purifier::clean($data['content']);
+
+        if ($request->hasFile('featured_image')) {
+            $data['featured_image'] = $request->file('featured_image')->store('posts', 'public');
+        }
 
         Post::create($data);
 
@@ -52,10 +58,18 @@ class PostController extends Controller
             'excerpt' => 'nullable|string|max:500',
             'content' => 'required|string',
             'status'  => 'required|in:draft,published',
+            'featured_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         $data['content'] = Purifier::clean($data['content']);
 
+        if ($request->hasFile('featured_image')) {
+            if ($post->featured_image) {
+                Storage::disk('public')->delete($post->featured_image);
+            }
+            $data['featured_image'] = $request->file('featured_image')->store('posts', 'public');
+        }
+        
         $post->update($data);
 
         return redirect()->route('posts.index')
@@ -64,6 +78,10 @@ class PostController extends Controller
 
     public function destroy(Post $post)
     {
+        if ($post->featured_image) {
+            Storage::disk('public')->delete($post->featured_image);
+        }
+
         $post->delete();
 
         return redirect()->route('posts.index')

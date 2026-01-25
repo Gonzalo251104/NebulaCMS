@@ -4,7 +4,7 @@
     </x-slot>
 
     <div class="p-6 max-w-4xl mx-auto">
-        <form method="POST" action="{{ route('posts.store') }}">
+        <form method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data">
             @csrf
 
             {{-- Título --}}
@@ -33,6 +33,14 @@
                     placeholder="Resumen corto del post"
                 >{{ old('excerpt') }}</textarea>
                 @error('excerpt')
+                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div class="mb-4">
+                <label class="block font-medium mb-1">Imagen destacada</label>
+                <input type="file" name="featured_image" class="w-full p-2 border rounded" accept="image/*">
+                @error('featured_image')
                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                 @enderror
             </div>
