@@ -84,6 +84,32 @@
                 menubar: false,
                 plugins: 'lists link image code table',
                 toolbar: 'undo redo | blocks | bold italic underline | bullist numlist | link image table | code',
+
+                automatic_uploads: true,
+                images_upload_url: '{{ route('admin.uploads.images') }}',
+                images_reuse_filename: true,
+
+                images_upload_handler: (blobInfo, progress) => new Promise((resolve, reject) => {
+                    const formData = new FormData();
+                    formData.append('file', blobInfo.blob(), blobInfo.filename());
+
+                    fetch('{{ route('admin.uploads.images') }}', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        },
+                        body: formData
+                    })
+                    .then(async (res) => {
+                        if (!res.ok) throw new Error('Upload failed');
+                        return res.json();
+                    })
+                    .then((json) => {
+                        if (!json.location) throw new Error('Invalid JSON response');
+                        resolve(json.location);
+                    })
+                    .catch((err) => reject(err.message));
+                }),
             });
         </script>
     @endpush
