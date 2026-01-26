@@ -82,7 +82,7 @@
                 >
                     {{ __('Media') }}
                 </x-responsive-nav-link>
-            @endrole
+            @endcan
         </div>
 
         <!-- Responsive Settings Options -->
