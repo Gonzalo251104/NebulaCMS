@@ -7,10 +7,13 @@ use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Mews\Purifier\Facades\Purifier;
 
 class PostController extends Controller
 {
+    use AuthorizesRequests;
+    
     public function index()
     {
         $posts = Post::latest()->get();
@@ -48,11 +51,15 @@ class PostController extends Controller
 
     public function edit(Post $post)
     {
+        $this->authorize('update', $post);
+
         return view('admin.posts.edit', compact('post'));
     }
 
     public function update(Request $request, Post $post)
     {
+        $this->authorize('update', $post);
+
         $data = $request->validate([
             'title'   => 'required|string|max:255',
             'excerpt' => 'nullable|string|max:500',
@@ -78,6 +85,8 @@ class PostController extends Controller
 
     public function destroy(Post $post)
     {
+        $this->authorize('delete', $post);
+
         if ($post->featured_image) {
             Storage::disk('public')->delete($post->featured_image);
         }

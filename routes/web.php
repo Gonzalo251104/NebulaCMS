@@ -27,22 +27,20 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // Posts
-    Route::middleware(['permission:posts.view'])->group(function () {
+     Route::middleware(['permission:posts.view'])->group(function () {
         Route::get('/admin/posts', [PostController::class, 'index'])->name('posts.index');
+
+        Route::get('/admin/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
+
+        Route::put('/admin/posts/{post}', [PostController::class, 'update'])->name('posts.update');
+
+        Route::delete('/admin/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
     });
 
     Route::middleware(['permission:posts.create'])->group(function () {
         Route::get('/admin/posts/create', [PostController::class, 'create'])->name('posts.create');
+
         Route::post('/admin/posts', [PostController::class, 'store'])->name('posts.store');
-    });
-
-    Route::middleware(['permission:posts.edit'])->group(function () {
-        Route::get('/admin/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
-        Route::put('/admin/posts/{post}', [PostController::class, 'update'])->name('posts.update');
-    });
-
-    Route::middleware(['permission:posts.delete'])->group(function () {
-        Route::delete('/admin/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
     });
 
     // Media Library

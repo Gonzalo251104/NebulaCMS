@@ -22,12 +22,16 @@
                     <td class="p-2">{{ $post->title }}</td>
                     <td class="p-2">{{ $post->status }}</td>
                     <td class="p-2 flex gap-2">
-                        <a href="{{ route('posts.edit', $post) }}" class="underline">Editar</a>
+                        @can('update', $post)
+                            <a href="{{ route('posts.edit', $post) }}" class="underline">Editar</a>
+                        @endcan
 
+                        @can('delete', $post)
                         <form method="POST" action="{{ route('posts.destroy', $post) }}">
                             @csrf @method('DELETE')
                             <button class="text-red-600">Eliminar</button>
                         </form>
+                        @endcan
                     </td>
                 </tr>
                 @endforeach
